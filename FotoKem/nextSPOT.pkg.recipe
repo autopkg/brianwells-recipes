@@ -28,50 +28,12 @@ NOTE: The app installs a Launch Agent for the user when first launched.</string>
 				<dict>
 						<key>Applications</key>
 						<string>0775</string>
-						<key>System</key>
-						<string>0755</string>
-						<key>System/Library</key>
-						<string>0755</string>
-						<key>System/Library/User Template</key>
-						<string>0700</string>
-						<key>System/Library/User Template/Non_localized</key>
-						<string>0755</string>
-						<key>System/Library/User Template/Non_localized/Library</key>
-						<string>0700</string>
-						<key>System/Library/User Template/Non_localized/Library/LaunchAgents</key>
-						<string>0700</string>
 				</dict>
 				<key>pkgroot</key>
 				<string>%RECIPE_CACHE_DIR%/pkg/root</string>
 			</dict>
 			<key>Processor</key>
 			<string>PkgRootCreator</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>file_mode</key>
-				<string>0644</string>
-				<key>file_content</key>
-				<string>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
-	&lt;!-- This launches the nextSPOT Download Manager every time the user logs in. --&gt;
-	&lt;dict&gt;
-		&lt;key&gt;Label&lt;/key&gt;
-		&lt;string&gt;com.fotokem.downloadManager&lt;/string&gt;
-		&lt;key&gt;KeepAlive&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;Program&lt;/key&gt;
-		&lt;string&gt;/Applications/nextSPOTDownload_x64.app/Contents/MacOS/nextSPOTDownload&lt;/string&gt;
-	&lt;/dict&gt;
-&lt;/plist&gt;
-</string>
-				<key>file_path</key>
-				<string>%RECIPE_CACHE_DIR%/pkg/root/System/Library/User Template/Non_localized/Library/LaunchAgents/com.fotokem.downloadManager.plist</string>
-			</dict>
-			<key>Processor</key>
-			<string>FileCreator</string>
 		</dict>
 		<dict>
 			<key>Arguments</key>
@@ -128,8 +90,6 @@ NOTE: The app installs a Launch Agent for the user when first launched.</string>
 					<string>flat</string>
 					<key>version</key>
 					<string>%version%</string>
-					<key>scripts</key>
-					<string>scripts</string>
 					<key>options</key>
 					<string>purge_ds_store</string>
 					<key>chown</key>
@@ -141,14 +101,6 @@ NOTE: The app installs a Launch Agent for the user when first launched.</string>
 							<string>root</string>
 							<key>group</key>
 							<string>admin</string>
-						</dict>
-						<dict>
-							<key>path</key>
-							<string>System</string>
-							<key>user</key>
-							<string>root</string>
-							<key>group</key>
-							<string>wheel</string>
 						</dict>
 					</array>
 				</dict>
