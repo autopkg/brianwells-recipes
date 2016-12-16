@@ -42,29 +42,6 @@
 			<string>EndOfCheckPhase</string>
 		</dict>
 		<dict>
-			<key>Processor</key>
-			<string>io.github.hjuutilainen.SharedProcessors/ChecksumVerifier</string>
-			<key>Arguments</key>
-			<dict>
-				<key>algorithm</key>
-				<string>MD5</string>
-				<key>checksum</key>
-				<string>%checksum%</string>
-			</dict>
-		</dict>
-		<!-- Mark DMG as read-only to prevent future MD5 checksums from failing -->
-		<dict>
-			<key>Processor</key>
-			<string>com.github.brianwells.SharedProcessors/FileAccessSetter</string>
-			<key>Arguments</key>
-			<dict>
-				<key>file_path</key>
-				<string>%pathname%</string>
-				<key>file_mode</key>
-				<string>0444</string>
-			</dict>
-		</dict>
-		<dict>
 			<key>Arguments</key>
 			<dict>
 				<key>input_path</key>
