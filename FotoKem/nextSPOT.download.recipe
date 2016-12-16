@@ -3,7 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the latest version of nextSPOT Download Manager.</string>
+	<string>Downloads the latest version of nextSPOT Download Manager.
+
+NOTE: The app from the vendor is NOT code signed.
+
+NOTE: The app installs a Launch Agent for the user when first launched.</string>
 	<key>Identifier</key>
 	<string>com.github.brianwells.download.nextSPOT</string>
 	<key>Input</key>
