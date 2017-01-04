@@ -3,7 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the latest version of nextSPOT Download Manager and creates a package.
+	<string>Creates a flat package from a manually-download copy of nextSPOT Download Manager.
+
+This recipe originally provided an automated download of nextSPOT Download Manager,
+using a download parent recipe. However, the URL was temporary in nature and so now
+this recipe requires a manual download of the .dmg and for it to be passed via the
+`--pkg` argument to `autopkg run`.
 
 NOTE: The app from the vendor is NOT code signed.
 
@@ -17,10 +22,12 @@ NOTE: The app installs a Launch Agent for the user when first launched.</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.6.1</string>
-	<key>ParentRecipe</key>
-	<string>com.github.brianwells.download.nextSPOT</string>
 	<key>Process</key>
 	<array>
+		<dict>
+			<key>Processor</key>
+			<string>PackageRequired</string>
+		</dict>
 		<dict>
 			<key>Arguments</key>
 			<dict>
@@ -39,7 +46,7 @@ NOTE: The app installs a Launch Agent for the user when first launched.</string>
 			<key>Arguments</key>
 			<dict>
 				<key>pkg_path</key>
-				<string>%pathname%/nextSPOTDownloadInstaller_x64.mpkg/Contents/Packages/nextspotdownloadx64.pkg</string>
+				<string>%PKG%/nextSPOTDownloadInstaller_x64.mpkg/Contents/Packages/nextspotdownloadx64.pkg</string>
 				<key>extract_root</key>
 				<string>%RECIPE_CACHE_DIR%/extracted</string>
 			</dict>
