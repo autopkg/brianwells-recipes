@@ -18,6 +18,7 @@
 
 """See docstring for SigniantAppURLProvider class"""
 
+from __future__ import absolute_import
 import urllib2, argparse, sys
 from xml.etree import ElementTree
 from distutils.version import LooseVersion
@@ -67,7 +68,7 @@ class SigniantAppURLProvider(Processor):
             # parse XML data
             try:
                 root = ElementTree.fromstring(xml_data)
-            except (OSError, IOError, ElementTree.ParseError), err:
+            except (OSError, IOError, ElementTree.ParseError) as err:
                 raise Exception("Can't read %s: %s" % (xml_data, err))
 
             # extract version number from the XML
