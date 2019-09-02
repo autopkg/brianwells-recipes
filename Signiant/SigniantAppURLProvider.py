@@ -19,9 +19,13 @@
 """See docstring for SigniantAppURLProvider class"""
 
 from __future__ import absolute_import
-import urllib2, argparse, sys
-from xml.etree import ElementTree
+
+import argparse
+import sys
+import urllib2
 from distutils.version import LooseVersion
+from xml.etree import ElementTree
+
 from autopkglib import Processor, ProcessorError
 
 UPDATE_XML_URL = "https://updates.signiant.com/signiant_app/signiant-app-info-mac.xml"
