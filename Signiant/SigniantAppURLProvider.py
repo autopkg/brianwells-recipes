@@ -65,7 +65,7 @@ class SigniantAppURLProvider(Processor):
                 fref = urllib2.urlopen(UPDATE_XML_URL)
                 xml_data = fref.read()
                 fref.close()
-            except BaseException as err:
+            except Exception as err:
                 raise ProcessorError(
                     "Can't download %s: %s" % (UPDATE_XML_URL, err))
 
