@@ -22,17 +22,16 @@ from __future__ import absolute_import
 
 import argparse
 import sys
-import urllib2
 from distutils.version import LooseVersion
 from xml.etree import ElementTree
 
-from autopkglib import Processor, ProcessorError
+from autopkglib import Processor, ProcessorError, URLGetter
 
 UPDATE_XML_URL = "https://updates.signiant.com/signiant_app/signiant-app-info-mac.xml"
 FILE_TEMPLATE = "Signiant_App_%s.dmg"
 URL_TEMPLATE = "https://updates.signiant.com/%s/%s"
 
-class SigniantAppURLProvider(Processor):
+class SigniantAppURLProvider(URLGetter):
     """Provides URL to the latest Signiant App release."""
     description = __doc__
     input_variables = {
@@ -61,13 +60,7 @@ class SigniantAppURLProvider(Processor):
             self.output("Using provided version %s" % version)
         else:
             # Read update xml
-            try:
-                fref = urllib2.urlopen(UPDATE_XML_URL)
-                xml_data = fref.read()
-                fref.close()
-            except Exception as err:
-                raise ProcessorError(
-                    "Can't download %s: %s" % (UPDATE_XML_URL, err))
+            xml_data = self.download(UPDATE_XML_URL)
 
             # parse XML data
             try:
@@ -101,15 +94,16 @@ class SigniantAppURLProvider(Processor):
         if filename is None:
             filename = FILE_TEMPLATE % version
         url = URL_TEMPLATE % (location, filename)
+        self.env["url"] = url
 
         # if no checksum, then get one from the server
         if md5_checksum is None:
-            request = urllib2.Request(url)
-            request.get_method = lambda : 'HEAD'
-            response = urllib2.urlopen(request)
-            md5_checksum = response.info().getheader('eTag').split('"')[1]
+            curl_cmd = self.prepare_curl_cmd()
+            curl_cmd.extend(['--head', url])
+            out, err, retcode = self.execute_curl(curl_cmd)
+            parsed_headers = self.parse_headers(out)
+            md5_checksum = parsed_headers.get('etag').strip('"')
 
-        self.env["url"] = url
         self.env["version"] = version
         if md5_checksum is not None:
             self.env["checksum"] = md5_checksum
