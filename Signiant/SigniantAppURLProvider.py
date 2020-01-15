@@ -20,8 +20,6 @@
 
 from __future__ import absolute_import
 
-import argparse
-import sys
 from distutils.version import LooseVersion
 from xml.etree import ElementTree
 
@@ -31,27 +29,30 @@ UPDATE_XML_URL = "https://updates.signiant.com/signiant_app/signiant-app-info-ma
 FILE_TEMPLATE = "Signiant_App_%s.dmg"
 URL_TEMPLATE = "https://updates.signiant.com/%s/%s"
 
+
 class SigniantAppURLProvider(URLGetter):
     """Provides URL to the latest Signiant App release."""
+
     description = __doc__
     input_variables = {
         "version": {
             "required": False,
-            "description": ("Specific version to download. If not defined, "
-                            "defaults to latest version.")
+            "description": (
+                "Specific version to download. If not defined, "
+                "defaults to latest version."
+            ),
         },
     }
     output_variables = {
         "version": {
-            "description": "The version of the update as extracted from the signiant website.",
+            "description": "The version of the update as extracted from the Signiant website.",
         },
-        "url": {
-            "description": "URL to the latest Signiant App release.",
-        },
+        "url": {"description": "URL to the latest Signiant App release.",},
+        "checksum": {"description": "Checksum or etag of Signiant release file.",},
     }
 
-    def get_installer_info(self):
-        """Gets info about an installer from Signiant website."""
+    def main(self):
+        """Get information about an update"""
         version = self.env.get("version")
         filename = None
         md5_checksum = None
@@ -66,7 +67,7 @@ class SigniantAppURLProvider(URLGetter):
             try:
                 root = ElementTree.fromstring(xml_data)
             except (OSError, IOError, ElementTree.ParseError) as err:
-                raise Exception("Can't read %s: %s" % (xml_data, err))
+                raise ProcessorError("Can't read %s: %s" % (xml_data, err))
 
             # extract version number from the XML
             version = None
@@ -99,26 +100,19 @@ class SigniantAppURLProvider(URLGetter):
         # if no checksum, then get one from the server
         if md5_checksum is None:
             curl_cmd = self.prepare_curl_cmd()
-            curl_cmd.extend(['--head', url])
+            curl_cmd.extend(["--head", url])
             out, err, retcode = self.execute_curl(curl_cmd)
             parsed_headers = self.parse_headers(out)
-            md5_checksum = parsed_headers.get('etag').strip('"')
+            md5_checksum = parsed_headers.get("etag").strip('"')
 
         self.env["version"] = version
         if md5_checksum is not None:
             self.env["checksum"] = md5_checksum
-        self.output("Found URL %s for version %s" % (self.env["url"], self.env["version"]))
+        self.output(
+            "Found URL %s for version %s" % (self.env["url"], self.env["version"])
+        )
 
-    def main(self):
-        """Get information about an update"""
-        self.get_installer_info()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input_plist")
-    parser.add_argument("output_plist")
-    parser.add_argument('vars', nargs='*')
-    args = parser.parse_args()
-    sys.argv = args.vars
-    PROCESSOR = SigniantAppURLProvider(None,open(args.input_plist),args.output_plist)
+    PROCESSOR = SigniantAppURLProvider()
     PROCESSOR.execute_shell()
