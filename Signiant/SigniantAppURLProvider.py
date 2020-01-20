@@ -61,7 +61,7 @@ class SigniantAppURLProvider(URLGetter):
             self.output("Using provided version %s" % version)
         else:
             # Read update xml
-            xml_data = self.download(UPDATE_XML_URL)
+            xml_data = self.download(UPDATE_XML_URL, text=True)
 
             # parse XML data
             try:
